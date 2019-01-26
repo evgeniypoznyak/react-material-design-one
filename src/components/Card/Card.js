@@ -9,10 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import { Theme } from '@material-ui/core/es';
-import createStyles from '@material-ui/core/styles/createStyles';
 
-const styles = (theme: Theme) => createStyles({
+const styles = theme => ({
     card: {
         display: 'flex',
     },
