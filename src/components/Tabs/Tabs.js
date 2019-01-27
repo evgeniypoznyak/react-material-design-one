@@ -1,39 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
-import HelpIcon from '@material-ui/icons/Help';
-import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import ThumbDown from '@material-ui/icons/ThumbDown';
-import ThumbUp from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 
-function TabContainer(props) {
+function TabContainer({ children, dir }) {
     return (
-        <Typography component="div" style={{ padding: 8 * 3 }}>
-            {props.children}
+        <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+            {children}
         </Typography>
     );
 }
 
 TabContainer.propTypes = {
     children: PropTypes.node.isRequired,
+    dir: PropTypes.string.isRequired,
 };
 
 const styles = theme => ({
     root: {
-        flexGrow: 1,
-        width: '100%',
         backgroundColor: theme.palette.background.paper,
+        width: 500,
     },
 });
 
-class ScrollableTabsButtonForce extends React.Component {
+class FullWidthTabs extends React.Component {
     state = {
         value: 0,
     };
@@ -42,44 +36,45 @@ class ScrollableTabsButtonForce extends React.Component {
         this.setState({ value });
     };
 
+    handleChangeIndex = index => {
+        this.setState({ value: index });
+    };
+
     render() {
-        const { classes } = this.props;
-        const { value } = this.state;
+        const { classes, theme } = this.props;
 
         return (
             <div className={classes.root}>
                 <AppBar position="static" color="default">
                     <Tabs
-                        value={value}
+                        value={this.state.value}
                         onChange={this.handleChange}
-                        variant="scrollable"
-                        scrollButtons="on"
                         indicatorColor="primary"
                         textColor="primary"
+                        variant="fullWidth"
                     >
-                        <Tab label="Item One" icon={<PhoneIcon />} />
-                        <Tab label="Item Two" icon={<FavoriteIcon />} />
-                        <Tab label="Item Three" icon={<PersonPinIcon />} />
-                        <Tab label="Item Four" icon={<HelpIcon />} />
-                        <Tab label="Item Five" icon={<ShoppingBasket />} />
-                        <Tab label="Item Six" icon={<ThumbDown />} />
-                        <Tab label="Item Seven" icon={<ThumbUp />} />
+                        <Tab label="Item One" />
+                        <Tab label="Item Two" />
+                        <Tab label="Item Three" />
                     </Tabs>
                 </AppBar>
-                {value === 0 && <TabContainer>Item One</TabContainer>}
-                {value === 1 && <TabContainer>Item Two</TabContainer>}
-                {value === 2 && <TabContainer>Item Three</TabContainer>}
-                {value === 3 && <TabContainer>Item Four</TabContainer>}
-                {value === 4 && <TabContainer>Item Five</TabContainer>}
-                {value === 5 && <TabContainer>Item Six</TabContainer>}
-                {value === 6 && <TabContainer>Item Seven</TabContainer>}
+                <SwipeableViews
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    index={this.state.value}
+                    onChangeIndex={this.handleChangeIndex}
+                >
+                    <TabContainer dir={theme.direction}>Item One</TabContainer>
+                    <TabContainer dir={theme.direction}>Item Two</TabContainer>
+                    <TabContainer dir={theme.direction}>Item Three</TabContainer>
+                </SwipeableViews>
             </div>
         );
     }
 }
 
-ScrollableTabsButtonForce.propTypes = {
+FullWidthTabs.propTypes = {
     classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ScrollableTabsButtonForce);
+export default withStyles(styles, { withTheme: true })(FullWidthTabs);
